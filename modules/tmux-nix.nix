@@ -5,7 +5,11 @@
   ...
 }: {
   options.tmux-nix = {
-    enable = lib.mkEnableOption "Enable tmux-nix";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whenever to configure {command}`tmux` system-wide.";
+    };
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.tmux;
@@ -14,6 +18,9 @@
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       default = "";
+      example = ''
+        display-message "Hello, tmux-nix!"
+      '';
       description = "Extra tmux configuration";
     };
   };
