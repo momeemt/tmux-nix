@@ -16,3 +16,6 @@
 - Configure each key binding with `key` and `repeatable` attributes under the binding name (e.g. `keymaps.pane.left.key`).
 - Keep integration tests minimal: verify non-repeatable bindings via `left` and `right`, and repeatable bindings via `up` and `down`.
 - Append any new decisions or rules identified during implementation to this file.
+
+- Each `keymaps.resize.*` binding includes an `amount` option (default 5). Tests must verify these values with the existing `check` helper.
+- README should list options with a sample configuration and avoid explaining tmux commands like `resize-pane`.
