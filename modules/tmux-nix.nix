@@ -44,10 +44,22 @@
             in
               lib.types.submodule {
                 options = {
-                  left = lib.mkOption { type = bindingType; default = {}; };
-                  right = lib.mkOption { type = bindingType; default = {}; };
-                  up = lib.mkOption { type = bindingType; default = {}; };
-                  down = lib.mkOption { type = bindingType; default = {}; };
+                  left = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  right = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  up = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  down = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
                 };
               };
           };
@@ -59,8 +71,14 @@
         pane = {
           left.key = "h";
           right.key = "l";
-          up = { key = "j"; repeatable = true; };
-          down = { key = "k"; repeatable = true; };
+          up = {
+            key = "j";
+            repeatable = true;
+          };
+          down = {
+            key = "k";
+            repeatable = true;
+          };
         };
       };
     };
@@ -78,8 +96,7 @@
     home.packages = [config.tmux-nix.package];
     home.file.".tmux.conf".text = let
       tmux-nix = config.tmux-nix;
-      bind-key = binding: cmd:
-        "bind-key${lib.optionalString binding.repeatable " -r"} ${binding.key} ${cmd}";
+      bind-key = binding: cmd: "bind-key${lib.optionalString binding.repeatable " -r"} ${binding.key} ${cmd}";
       maybe-bind-key = binding: cmd:
         lib.optionalString (binding.key != null) (bind-key binding cmd);
     in ''

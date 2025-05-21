@@ -72,8 +72,14 @@
                   pane = {
                     left.key = "h";
                     right.key = "l";
-                    up = { key = "j"; repeatable = true; };
-                    down = { key = "k"; repeatable = true; };
+                    up = {
+                      key = "j";
+                      repeatable = true;
+                    };
+                    down = {
+                      key = "k";
+                      repeatable = true;
+                    };
                   };
                 };
                 extraConfig = ''
@@ -103,6 +109,7 @@
           projectRootFile = "flake.nix";
           programs = {
             alejandra.enable = true;
+            mdformat.enable = true;
           };
           settings.global.excludes = [
             "LICENSE-*"
