@@ -68,7 +68,17 @@
               tmux-nix = {
                 enable = true;
                 prefix = "C-a";
-                extraConfig = "set -g status off";
+                keymaps = {
+                  pane = {
+                    left = "h";
+                    right = "l";
+                    up = "j";
+                    down = "k";
+                  };
+                };
+                extraConfig = ''
+                  display-message "Hello, tmux-nix!"
+                '';
               };
               home.stateVersion = "24.11";
             };
@@ -76,7 +86,6 @@
           testScript = ''
             start_all
             machine.wait_for_unit("default.target");
-            machine.succeed("grep 'status off' /home/alice/.tmux.conf");
             machine.succeed("su - alice -c 'tmux -V'");
           '';
         };
