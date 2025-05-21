@@ -28,17 +28,38 @@
             description = "Pane movement key bindings";
             default = {};
             type = let
-              common = lib.mkOption {
-                type = lib.types.nullOr lib.types.str;
-                default = null;
+              bindingType = lib.types.submodule {
+                options = {
+                  key = lib.mkOption {
+                    type = lib.types.nullOr lib.types.str;
+                    default = null;
+                  };
+                  repeatable = lib.mkOption {
+                    type = lib.types.bool;
+                    default = false;
+                    description = "Whether to pass -r to bind-key.";
+                  };
+                };
               };
             in
               lib.types.submodule {
                 options = {
-                  left = common;
-                  right = common;
-                  up = common;
-                  down = common;
+                  left = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  right = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  up = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
+                  down = lib.mkOption {
+                    type = bindingType;
+                    default = {};
+                  };
                 };
               };
           };
@@ -48,10 +69,16 @@
       description = "Keymaps to use for tmux";
       example = {
         pane = {
-          left = "h";
-          right = "l";
-          up = "j";
-          down = "k";
+          left.key = "h";
+          right.key = "l";
+          up = {
+            key = "j";
+            repeatable = true;
+          };
+          down = {
+            key = "k";
+            repeatable = true;
+          };
         };
       };
     };
@@ -69,8 +96,9 @@
     home.packages = [config.tmux-nix.package];
     home.file.".tmux.conf".text = let
       tmux-nix = config.tmux-nix;
-      bind-key = key: cmd: "bind-key ${key} ${cmd}";
-      maybe-bind-key = key: cmd: lib.optionalString (key != null) (bind-key key cmd);
+      bind-key = binding: cmd: "bind-key${lib.optionalString binding.repeatable " -r"} ${binding.key} ${cmd}";
+      maybe-bind-key = binding: cmd:
+        lib.optionalString (binding.key != null) (bind-key binding cmd);
     in ''
       set-option -g prefix ${tmux-nix.prefix}
 

@@ -70,10 +70,16 @@
                 prefix = "C-a";
                 keymaps = {
                   pane = {
-                    left = "h";
-                    right = "l";
-                    up = "j";
-                    down = "k";
+                    left.key = "h";
+                    right.key = "l";
+                    up = {
+                      key = "j";
+                      repeatable = true;
+                    };
+                    down = {
+                      key = "k";
+                      repeatable = true;
+                    };
                   };
                 };
                 extraConfig = ''
@@ -93,8 +99,8 @@
             ${check "set-option -g prefix C-a"}
             ${check "bind-key h select-pane -L"}
             ${check "bind-key l select-pane -R"}
-            ${check "bind-key j select-pane -U"}
-            ${check "bind-key k select-pane -D"}
+            ${check "bind-key -r j select-pane -U"}
+            ${check "bind-key -r k select-pane -D"}
             ${check "display-message \"Hello, tmux-nix!\""}
           '';
         };
@@ -103,6 +109,7 @@
           projectRootFile = "flake.nix";
           programs = {
             alejandra.enable = true;
+            mdformat.enable = true;
           };
           settings.global.excludes = [
             "LICENSE-*"
