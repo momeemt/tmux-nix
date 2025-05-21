@@ -67,6 +67,7 @@
               ];
               tmux-nix = {
                 enable = true;
+                prefix = "C-a";
                 extraConfig = "set -g status off";
               };
               home.stateVersion = "24.11";
