@@ -81,6 +81,26 @@
                       repeatable = true;
                     };
                   };
+                  resize = {
+                    left = {
+                      key = "H";
+                      amount = 10;
+                    };
+                    right = {
+                      key = "L";
+                      amount = 10;
+                    };
+                    up = {
+                      key = "J";
+                      repeatable = true;
+                      amount = 10;
+                    };
+                    down = {
+                      key = "K";
+                      repeatable = true;
+                      amount = 10;
+                    };
+                  };
                 };
                 extraConfig = ''
                   display-message "Hello, tmux-nix!"
@@ -101,6 +121,10 @@
             ${check "bind-key l select-pane -R"}
             ${check "bind-key -r j select-pane -U"}
             ${check "bind-key -r k select-pane -D"}
+            ${check "bind-key H resize-pane -L 10"}
+            ${check "bind-key L resize-pane -R 10"}
+            ${check "bind-key -r J resize-pane -U 10"}
+            ${check "bind-key -r K resize-pane -D 10"}
             ${check "display-message \"Hello, tmux-nix!\""}
           '';
         };

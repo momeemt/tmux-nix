@@ -23,45 +23,89 @@
     };
     keymaps = lib.mkOption {
       type = lib.types.submodule {
-        options = {
+        options = let
+          baseBindingType = lib.types.submodule {
+            options = {
+              key = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+              };
+              repeatable = lib.mkOption {
+                type = lib.types.bool;
+                default = false;
+                description = "Whether to pass -r to bind-key.";
+              };
+            };
+          };
+          bindingType = baseBindingType;
+          resizeBindingType = lib.types.submodule {
+            options = {
+              key = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+              };
+              repeatable = lib.mkOption {
+                type = lib.types.bool;
+                default = false;
+                description = "Whether to pass -r to bind-key.";
+              };
+              amount = lib.mkOption {
+                type = lib.types.int;
+                default = 5;
+                description = "Number of cells to adjust when resizing.";
+              };
+            };
+          };
+          bindingGroup = lib.types.submodule {
+            options = {
+              left = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              right = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              up = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              down = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+            };
+          };
+          resizeGroup = lib.types.submodule {
+            options = {
+              left = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              right = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              up = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              down = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+            };
+          };
+        in {
           pane = lib.mkOption {
             description = "Pane movement key bindings";
             default = {};
-            type = let
-              bindingType = lib.types.submodule {
-                options = {
-                  key = lib.mkOption {
-                    type = lib.types.nullOr lib.types.str;
-                    default = null;
-                  };
-                  repeatable = lib.mkOption {
-                    type = lib.types.bool;
-                    default = false;
-                    description = "Whether to pass -r to bind-key.";
-                  };
-                };
-              };
-            in
-              lib.types.submodule {
-                options = {
-                  left = lib.mkOption {
-                    type = bindingType;
-                    default = {};
-                  };
-                  right = lib.mkOption {
-                    type = bindingType;
-                    default = {};
-                  };
-                  up = lib.mkOption {
-                    type = bindingType;
-                    default = {};
-                  };
-                  down = lib.mkOption {
-                    type = bindingType;
-                    default = {};
-                  };
-                };
-              };
+            type = bindingGroup;
+          };
+          resize = lib.mkOption {
+            description = "Pane resizing key bindings";
+            default = {};
+            type = resizeGroup;
           };
         };
       };
@@ -78,6 +122,26 @@
           down = {
             key = "k";
             repeatable = true;
+          };
+        };
+        resize = {
+          left = {
+            key = "H";
+            amount = 10;
+          };
+          right = {
+            key = "L";
+            amount = 10;
+          };
+          up = {
+            key = "J";
+            repeatable = true;
+            amount = 10;
+          };
+          down = {
+            key = "K";
+            repeatable = true;
+            amount = 10;
           };
         };
       };
@@ -107,6 +171,12 @@
       ${maybe-bind-key tmux-nix.keymaps.pane.right "select-pane -R"}
       ${maybe-bind-key tmux-nix.keymaps.pane.up "select-pane -U"}
       ${maybe-bind-key tmux-nix.keymaps.pane.down "select-pane -D"}
+
+      # -- pane resizing --
+      ${maybe-bind-key tmux-nix.keymaps.resize.left "resize-pane -L ${toString tmux-nix.keymaps.resize.left.amount}"}
+      ${maybe-bind-key tmux-nix.keymaps.resize.right "resize-pane -R ${toString tmux-nix.keymaps.resize.right.amount}"}
+      ${maybe-bind-key tmux-nix.keymaps.resize.up "resize-pane -U ${toString tmux-nix.keymaps.resize.up.amount}"}
+      ${maybe-bind-key tmux-nix.keymaps.resize.down "resize-pane -D ${toString tmux-nix.keymaps.resize.down.amount}"}
 
       ${tmux-nix.extraConfig}
     '';
