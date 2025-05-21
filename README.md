@@ -32,4 +32,3 @@ Example configuration:
   };
 }
 ```
-

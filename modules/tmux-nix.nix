@@ -58,18 +58,42 @@
           };
           bindingGroup = lib.types.submodule {
             options = {
-              left = lib.mkOption { type = bindingType; default = {}; };
-              right = lib.mkOption { type = bindingType; default = {}; };
-              up = lib.mkOption { type = bindingType; default = {}; };
-              down = lib.mkOption { type = bindingType; default = {}; };
+              left = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              right = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              up = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
+              down = lib.mkOption {
+                type = bindingType;
+                default = {};
+              };
             };
           };
           resizeGroup = lib.types.submodule {
             options = {
-              left = lib.mkOption { type = resizeBindingType; default = {}; };
-              right = lib.mkOption { type = resizeBindingType; default = {}; };
-              up = lib.mkOption { type = resizeBindingType; default = {}; };
-              down = lib.mkOption { type = resizeBindingType; default = {}; };
+              left = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              right = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              up = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
+              down = lib.mkOption {
+                type = resizeBindingType;
+                default = {};
+              };
             };
           };
         in {
