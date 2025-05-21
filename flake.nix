@@ -87,6 +87,15 @@
             start_all
             machine.wait_for_unit("default.target");
             machine.succeed("su - alice -c 'tmux -V'");
+            let
+              check = line: machine.succeed("grep -q '^${line}$' /home/alice/.tmux.conf");
+            in
+              check "set-option -g prefix C-a";
+              check "bind-key h select-pane -L";
+              check "bind-key l select-pane -R";
+              check "bind-key j select-pane -U";
+              check "bind-key k select-pane -D";
+              check "display-message \"Hello, tmux-nix!\"";
           '';
         };
 
