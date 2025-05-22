@@ -22,3 +22,5 @@
 - Each `keymaps.resize.*` binding includes an `amount` option (default 5). Tests must verify these values with the existing `check` helper.
 
 - README should list options with a sample configuration and avoid explaining tmux commands like `resize-pane`.
+
+- Avoid `with lib;` in modules. Reference `lib` functions explicitly to keep scopes narrow.

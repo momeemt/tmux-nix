@@ -102,6 +102,17 @@
                     };
                   };
                 };
+                plugins.cpu = {
+                  enable = true;
+                  cpu.lowIcon = "-";
+                  cpu.mediumThresh = 20;
+                  cpu.highThresh = 80;
+                  ram.mediumBgColor = "#[bg=yellow]";
+                  gpu.lowIcon = "G";
+                  gram.percentageFormat = "%5.1f%%";
+                  cpuTemp.unit = "F";
+                  gpuTemp.unit = "F";
+                };
                 extraConfig = ''
                   display-message "Hello, tmux-nix!"
                 '';
@@ -126,6 +137,15 @@
             ${check "bind-key -r J resize-pane -U 10"}
             ${check "bind-key -r K resize-pane -D 10"}
             ${check "display-message \"Hello, tmux-nix!\""}
+            ${check "run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/tmux-cpu/cpu.tmux"}
+            ${check "set -g @cpu_low_icon \"-\""}
+            ${check "set -g @cpu_medium_thresh 20"}
+            ${check "set -g @cpu_high_thresh 80"}
+            ${check "set -g @ram_medium_bg_color \"#[bg=yellow]\""}
+            ${check "set -g @gpu_low_icon \"G\""}
+            ${check "set -g @gram_percentage_format \"%5.1f%%\""}
+            ${check "set -g @cpu_temp_unit \"F\""}
+            ${check "set -g @gpu_temp_unit \"F\""}
           '';
         };
 

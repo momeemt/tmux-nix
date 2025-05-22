@@ -10,6 +10,7 @@ Configure tmux with Nix.
 - `tmux-nix.keymaps.pane.*`: pane movement key bindings.
 - `tmux-nix.keymaps.resize.*`: pane resizing bindings; each binding has an `amount` attribute.
 - `tmux-nix.extraConfig` (lines): additional configuration appended to `.tmux.conf`.
+- `tmux-nix.plugins.cpu.*`: configuration for the `tmux-cpu` plugin. See `doc/plugins/cpu.md` for details.
 
 Example configuration:
 
@@ -17,6 +18,7 @@ Example configuration:
 {
   tmux-nix = {
     enable = true;
+    plugins.cpu.enable = true;
     keymaps.resize.left.amount = 10;
     keymaps.resize.right.amount = 10;
     keymaps.resize.up = {

@@ -4,6 +4,9 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ../plugins/cpu.nix
+  ];
   options.tmux-nix = {
     enable = lib.mkOption {
       type = lib.types.bool;
