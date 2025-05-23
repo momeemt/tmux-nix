@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.tmux-nix.plugins.cpu;
-  pluginLib = import ../lib.nix {inherit lib;}; # Updated import path
+  tmux-nix-lib = import ../lib.nix {inherit lib;}; # Updated import path
 
   # CPU plugin specific option types
   mkDisplayOpts = {withThresholds ? false}:
@@ -150,24 +150,24 @@
   # Configuration line generation for different metric types
   confLines = lib.flatten [
     # CPU, RAM, GPU load metrics
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "cpu";
       config = cfg.cpu;
     })
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "ram";
       config = cfg.ram;
     })
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "gpu";
       config = cfg.gpu;
     })
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "gram";
       config = cfg.gram;
     })
     # Temperature metrics with special field mappings
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "cpu_temp";
       config = cfg.cpuTemp;
       fieldMappings = {
@@ -175,7 +175,7 @@
         unit = "cpu_temp_unit";
       };
     })
-    (pluginLib.generateConfigLines {
+    (tmux-nix-lib.generateConfigLines {
       prefix = "gpu_temp";
       config = cfg.gpuTemp;
       fieldMappings = {
