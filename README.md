@@ -11,6 +11,7 @@ Configure tmux with Nix.
 - `tmux-nix.keymaps.resize.*`: pane resizing bindings; each binding has an `amount` attribute.
 - `tmux-nix.extraConfig` (lines): additional configuration appended to `.tmux.conf`.
 - `tmux-nix.plugins.cpu.*`: configuration for the `tmux-cpu` plugin. See `doc/plugins/cpu.md` for details.
+- `tmux-nix.statusLeft.*`, `tmux-nix.statusRight.*`: configuration for the left and right status bar. See `doc/status-bar.md` for details.
 
 Example configuration:
 

@@ -43,5 +43,13 @@
     extraConfig = ''
       display-message "Hello, tmux-nix!"
     '';
+    statusLeft = {
+      text = "LEFT";
+      length = 20;
+    };
+    statusRight = {
+      text = "RIGHT";
+      length = 30;
+    };
   };
 }

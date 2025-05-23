@@ -16,4 +16,8 @@ with testLib; ''
   ${check "bind-key -r J resize-pane -U 10"}
   ${check "bind-key -r K resize-pane -D 10"}
   ${check "display-message \"Hello, tmux-nix!\""}
+  ${check "set-option -g status-left \"LEFT\""}
+  ${check "set-option -g status-left-length 20"}
+  ${check "set-option -g status-right \"RIGHT\""}
+  ${check "set-option -g status-right-length 30"}
 ''
