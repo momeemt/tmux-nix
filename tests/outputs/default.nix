@@ -1,5 +1,3 @@
-# /home/momeemt/ghq/github.com/momeemt/tmux-nix/tests/outputs/root.nix
-# Expected .tmux.conf content checks for root options
 {
   pkgs,
   testLib,
@@ -26,4 +24,6 @@ with testLib; ''
   ${check "set-option -g automatic-rename-format \"#{window_name}\""}
   ${check "set-option -g window-active-style \"bg=colour235,fg=colour255\""}
   ${check "set-option -g window-style \"bg=default,fg=colour245\""}
+  ${check "bind-key % split-window -h"}
+  ${check "bind-key -r \" split-window -v"}
 ''

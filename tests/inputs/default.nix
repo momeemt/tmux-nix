@@ -39,6 +39,13 @@
           amount = 10;
         };
       };
+      split = {
+        horizontal.key = "%";
+        vertical = {
+          key = "\"";
+          repeatable = true;
+        };
+      };
     };
     extraConfig = ''
       display-message "Hello, tmux-nix!"

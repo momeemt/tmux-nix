@@ -110,6 +110,24 @@
             default = {};
             type = resizeGroup;
           };
+          split = lib.mkOption {
+            description = "Window splitting key bindings";
+            default = {};
+            type = lib.types.submodule {
+              options = {
+                horizontal = lib.mkOption {
+                  description = "Split window horizontally";
+                  default = {key = "|";};
+                  type = bindingType;
+                };
+                vertical = lib.mkOption {
+                  description = "Split window vertically";
+                  default = {key = "-";};
+                  type = bindingType;
+                };
+              };
+            };
+          };
         };
       };
       default = {};
@@ -292,6 +310,10 @@
 
       # Pane resizing
       ${paneResizingBinds}
+
+      # Window splitting
+      ${lib.optionalString (keymaps.split.horizontal.key != null) (mkBind keymaps.split.horizontal.key keymaps.split.horizontal.repeatable "split-window -h")}
+      ${lib.optionalString (keymaps.split.vertical.key != null) (mkBind keymaps.split.vertical.key keymaps.split.vertical.repeatable "split-window -v")}
 
       # Window and Pane Behavior
       set-option -g base-index ${toString tmux-nix.baseIndex}
