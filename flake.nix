@@ -39,7 +39,7 @@
           ];
         };
 
-        homeModules.tmux-nix = import ./modules/tmux-nix.nix;
+        homeModules.tmux-nix = import ./modules;
       };
 
       perSystem = {
@@ -63,7 +63,7 @@
             users.users.alice.isNormalUser = true;
             home-manager.users.alice = {
               imports = [
-                (import ./modules/tmux-nix.nix)
+                (import ./modules)
               ];
               tmux-nix = {
                 enable = true;
