@@ -121,7 +121,7 @@
             };
           };
           testScript = let
-            escape = s: pkgs.lib.strings.escape ["\""] s;
+            escape = s: pkgs.lib.strings.escape ["\"" "[" "]"] s;
             check = line: "machine.succeed(\"grep -q '^${escape line}$' /home/alice/.tmux.conf\")";
           in ''
             start_all
@@ -139,8 +139,8 @@
             ${check "display-message \"Hello, tmux-nix!\""}
             ${check "run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/tmux-cpu/cpu.tmux"}
             ${check "set -g @cpu_low_icon \"-\""}
-            ${check "set -g @cpu_medium_thresh 20"}
-            ${check "set -g @cpu_high_thresh 80"}
+            ${check "set -g @cpu_medium_thresh \"20\""}
+            ${check "set -g @cpu_high_thresh \"80\""}
             ${check "set -g @ram_medium_bg_color \"#[bg=yellow]\""}
             ${check "set -g @gpu_low_icon \"G\""}
             ${check "set -g @gram_percentage_format \"%5.1f%%\""}

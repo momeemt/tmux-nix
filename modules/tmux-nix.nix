@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ../plugins/cpu.nix
+    ./plugins/cpu.nix
   ];
   options.tmux-nix = {
     enable = lib.mkOption {
