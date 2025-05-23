@@ -12,6 +12,12 @@ Configure tmux with Nix.
 - `tmux-nix.extraConfig` (lines): additional configuration appended to `.tmux.conf`.
 - `tmux-nix.plugins.cpu.*`: configuration for the `tmux-cpu` plugin. See `doc/plugins/cpu.md` for details.
 - `tmux-nix.statusLeft.*`, `tmux-nix.statusRight.*`: configuration for the left and right status bar. See `doc/status-bar.md` for details.
+- `tmux-nix.baseIndex` (integer): base index for windows.
+- `tmux-nix.paneBaseIndex` (integer): base index for panes.
+- `tmux-nix.automaticRename` (bool): enable/disable automatic window renaming.
+- `tmux-nix.automaticRenameFormat` (string): format for automatic window names.
+- `tmux-nix.activePaneStyle` (attrs): style for active panes.
+- `tmux-nix.inactivePaneStyle` (attrs): style for inactive panes.
 
 Example configuration:
 

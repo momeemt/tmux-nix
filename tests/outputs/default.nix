@@ -20,4 +20,10 @@ with testLib; ''
   ${check "set-option -g status-left-length 20"}
   ${check "set-option -g status-right \"RIGHT\""}
   ${check "set-option -g status-right-length 30"}
+  ${check "set-option -g base-index 1"}
+  ${check "set-option -g pane-base-index 1"}
+  ${check "set-option -g automatic-rename off"}
+  ${check "set-option -g automatic-rename-format \"#{window_name}\""}
+  ${check "set-option -g window-active-style \"bg=colour235,fg=colour255\""}
+  ${check "set-option -g window-style \"bg=default,fg=colour245\""}
 ''

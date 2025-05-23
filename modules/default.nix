@@ -197,6 +197,44 @@
       default = {};
       description = "Configuration for the right part of the status bar.";
     };
+    baseIndex = lib.mkOption {
+      type = lib.types.int;
+      default = 0;
+      description = "Base index for windows.";
+    };
+    paneBaseIndex = lib.mkOption {
+      type = lib.types.int;
+      default = 0;
+      description = "Base index for panes.";
+    };
+    automaticRename = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Automatically rename windows.";
+    };
+    automaticRenameFormat = lib.mkOption {
+      type = lib.types.str;
+      default = "#{b:pane_current_path}";
+      description = "Format for automatically renamed windows.";
+    };
+    activePaneStyle = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {
+        "bg" = "black";
+        "fg" = "white";
+      };
+      description = "Style for active panes. Keys are style attributes (e.g., bg, fg) and values are colors or attributes.";
+    };
+    inactivePaneStyle = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {
+        "bg" = "default";
+        "fg" = "default";
+      };
+      description = "Style for inactive panes. Keys are style attributes (e.g., bg, fg) and values are colors or attributes.";
+    };
   };
 
   config = lib.mkIf config.tmux-nix.enable {
@@ -254,6 +292,24 @@
 
       # Pane resizing
       ${paneResizingBinds}
+
+      # Window and Pane Behavior
+      set-option -g base-index ${toString tmux-nix.baseIndex}
+      set-option -g pane-base-index ${toString tmux-nix.paneBaseIndex}
+      set-option -g automatic-rename ${
+        if tmux-nix.automaticRename
+        then "on"
+        else "off"
+      }
+      set-option -g automatic-rename-format "${tmux-nix.automaticRenameFormat}"
+
+      # Pane Styles
+      ${lib.optionalString (tmux-nix.activePaneStyle != {}) ''
+        set-option -g window-active-style "${lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}=${value}") tmux-nix.activePaneStyle)}"
+      ''}
+      ${lib.optionalString (tmux-nix.inactivePaneStyle != {}) ''
+        set-option -g window-style "${lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}=${value}") tmux-nix.inactivePaneStyle)}"
+      ''}
 
       # Status bar
       ${lib.optionalString (tmux-nix.statusLeft.text != "") ''

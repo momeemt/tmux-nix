@@ -51,5 +51,17 @@
       text = "RIGHT";
       length = 30;
     };
+    baseIndex = 1;
+    paneBaseIndex = 1;
+    automaticRename = false;
+    automaticRenameFormat = "#{window_name}";
+    activePaneStyle = {
+      bg = "colour235"; # dark grey
+      fg = "colour255"; # white
+    };
+    inactivePaneStyle = {
+      bg = "default";
+      fg = "colour245"; # light grey
+    };
   };
 }
