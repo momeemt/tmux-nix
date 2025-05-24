@@ -25,6 +25,25 @@ NixOS 24.11で開発を行います。
 - tmux-nixはできるだけ宣言的にtmuxの設定を行うことを目指しています。したがって、手続き的な記述があれば宣言的な記述に書き換えるようにしてください。どのように書き換えるかはいくつかの方法を考え、チャット内で提示して、開発者と相談するようにしてください。
 - Nixの属性を記述する際は、可能な限りネストした形式を使用してください。例えば、`foo.bar = 1; foo.baz = 2;`のような形式ではなく、`foo = { bar = 1; baz = 2; };`のように記述してください。
 
+## モジュール構造
+
+tmux-nixは`programs.tmux-nix`として定義され、home-managerの標準的な構造に従います。これにより、他のhome-managerプログラムと一貫性のある設定方法を提供します。
+
+### 主要オプション
+
+- `programs.tmux-nix.enable`: モジュールの有効化
+- `programs.tmux-nix.out`: 設定ファイルの出力パス（デフォルト: `~/.tmux.conf`）
+- `programs.tmux-nix.package`: 使用するtmuxパッケージ
+- `programs.tmux-nix.prefix`: プレフィックスキー
+- `programs.tmux-nix.keymaps.*`: キーマップ設定（pane移動、リサイズ、ウィンドウ分割、リロード）
+- `programs.tmux-nix.defaultTerminal`: ターミナル設定
+- `programs.tmux-nix.terminalOverrides`: ターミナル機能上書き（TrueColor対応など）
+- `programs.tmux-nix.plugins.*`: プラグイン設定
+
+### パス処理
+
+設定ファイルの出力パスでチルダ（`~`）を使用する場合、home-managerの`home.file`では相対パス（`~/.tmux.conf` → `.tmux.conf`）として処理し、tmuxのreloadコマンドでは絶対パス（`/home/user/.tmux.conf`）として解決する必要があります。
+
 ## テスト
 
 - `flake.nix`にはNixOSモジュールのテストが含まれています。これを実行することでNixOSモジュールのテストを行うことができます。

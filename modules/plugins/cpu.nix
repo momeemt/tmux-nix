@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.tmux-nix.plugins.cpu;
+  cfg = config.programs.tmux-nix.plugins.cpu;
   tmux-nix-lib = import ../lib.nix {inherit lib;}; # Updated import path
 
   # CPU plugin specific option types
@@ -185,7 +185,7 @@
     })
   ];
 in {
-  options.tmux-nix.plugins.cpu = {
+  options.programs.tmux-nix.plugins.cpu = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -230,7 +230,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = [cfg.package];
-    tmux-nix.extraConfig = lib.mkAfter ''
+    programs.tmux-nix.extraConfig = lib.mkAfter ''
       # tmux-cpu plugin
       run-shell ${cfg.package}/share/tmux-plugins/tmux-cpu/cpu.tmux
       ${lib.concatStringsSep "\n" confLines}
