@@ -110,6 +110,24 @@
             default = {};
             type = resizeGroup;
           };
+          split = lib.mkOption {
+            description = "Window splitting key bindings";
+            default = {};
+            type = lib.types.submodule {
+              options = {
+                horizontal = lib.mkOption {
+                  description = "Split window horizontally";
+                  default = {key = "|";};
+                  type = bindingType;
+                };
+                vertical = lib.mkOption {
+                  description = "Split window vertically";
+                  default = {key = "-";};
+                  type = bindingType;
+                };
+              };
+            };
+          };
         };
       };
       default = {};
@@ -157,31 +175,177 @@
       '';
       description = "Extra tmux configuration";
     };
+    statusLeft = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          text = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            example = "#S";
+            description = "Content of the left status bar. If empty, tmux default is used.";
+          };
+          length = lib.mkOption {
+            type = lib.types.int;
+            default = 10; # Default tmux value
+            example = 20;
+            description = "Length of the left status bar.";
+          };
+        };
+      };
+      default = {};
+      description = "Configuration for the left part of the status bar.";
+    };
+    statusRight = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          text = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            example = "%H:%M";
+            description = "Content of the right status bar. If empty, tmux default is used.";
+          };
+          length = lib.mkOption {
+            type = lib.types.int;
+            default = 40; # Default tmux value
+            example = 30;
+            description = "Length of the right status bar.";
+          };
+        };
+      };
+      default = {};
+      description = "Configuration for the right part of the status bar.";
+    };
+    baseIndex = lib.mkOption {
+      type = lib.types.int;
+      default = 0;
+      description = "Base index for windows.";
+    };
+    paneBaseIndex = lib.mkOption {
+      type = lib.types.int;
+      default = 0;
+      description = "Base index for panes.";
+    };
+    automaticRename = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Automatically rename windows.";
+    };
+    automaticRenameFormat = lib.mkOption {
+      type = lib.types.str;
+      default = "#{b:pane_current_path}";
+      description = "Format for automatically renamed windows.";
+    };
+    activePaneStyle = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {
+        "bg" = "black";
+        "fg" = "white";
+      };
+      description = "Style for active panes. Keys are style attributes (e.g., bg, fg) and values are colors or attributes.";
+    };
+    inactivePaneStyle = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {
+        "bg" = "default";
+        "fg" = "default";
+      };
+      description = "Style for inactive panes. Keys are style attributes (e.g., bg, fg) and values are colors or attributes.";
+    };
   };
 
   config = lib.mkIf config.tmux-nix.enable {
     home.packages = [config.tmux-nix.package];
     home.file.".tmux.conf".text = let
       tmux-nix = config.tmux-nix;
-      bind-key = binding: cmd: "bind-key${lib.optionalString binding.repeatable " -r"} ${binding.key} ${cmd}";
-      maybe-bind-key = binding: cmd:
-        lib.optionalString (binding.key != null) (bind-key binding cmd);
+      keymaps = tmux-nix.keymaps;
+      # Helper function to generate bind-key commands
+      mkBind = key: repeatable: cmd: "bind-key${lib.optionalString repeatable " -r"} ${key} ${cmd}";
+
+      # Pane navigation keybindings
+      paneNavigationBinds = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          name: binding: let
+            direction =
+              {
+                left = "L";
+                right = "R";
+                up = "U";
+                down = "D";
+              }
+              .${name};
+          in
+            mkBind binding.key binding.repeatable "select-pane -${direction}"
+        )
+        keymaps.pane
+      );
+
+      # Pane resizing keybindings
+      paneResizingBinds = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          name: binding: let
+            direction =
+              {
+                left = "L";
+                right = "R";
+                up = "U";
+                down = "D";
+              }
+              .${name};
+          in
+            mkBind binding.key binding.repeatable "resize-pane -${direction} ${toString binding.amount}"
+        )
+        keymaps.resize
+      );
     in ''
+      ### Do not edit this file directly.
+      ### It is generated by tmux-nix.
+
+      # Prefix
       set-option -g prefix ${tmux-nix.prefix}
 
-      # -- pane movement --
-      ${maybe-bind-key tmux-nix.keymaps.pane.left "select-pane -L"}
-      ${maybe-bind-key tmux-nix.keymaps.pane.right "select-pane -R"}
-      ${maybe-bind-key tmux-nix.keymaps.pane.up "select-pane -U"}
-      ${maybe-bind-key tmux-nix.keymaps.pane.down "select-pane -D"}
+      # Pane navigation
+      ${paneNavigationBinds}
 
-      # -- pane resizing --
-      ${maybe-bind-key tmux-nix.keymaps.resize.left "resize-pane -L ${toString tmux-nix.keymaps.resize.left.amount}"}
-      ${maybe-bind-key tmux-nix.keymaps.resize.right "resize-pane -R ${toString tmux-nix.keymaps.resize.right.amount}"}
-      ${maybe-bind-key tmux-nix.keymaps.resize.up "resize-pane -U ${toString tmux-nix.keymaps.resize.up.amount}"}
-      ${maybe-bind-key tmux-nix.keymaps.resize.down "resize-pane -D ${toString tmux-nix.keymaps.resize.down.amount}"}
+      # Pane resizing
+      ${paneResizingBinds}
 
+      # Window splitting
+      ${lib.optionalString (keymaps.split.horizontal.key != null) (mkBind keymaps.split.horizontal.key keymaps.split.horizontal.repeatable "split-window -h")}
+      ${lib.optionalString (keymaps.split.vertical.key != null) (mkBind keymaps.split.vertical.key keymaps.split.vertical.repeatable "split-window -v")}
+
+      # Window and Pane Behavior
+      set-option -g base-index ${toString tmux-nix.baseIndex}
+      set-option -g pane-base-index ${toString tmux-nix.paneBaseIndex}
+      set-option -g automatic-rename ${
+        if tmux-nix.automaticRename
+        then "on"
+        else "off"
+      }
+      set-option -g automatic-rename-format "${tmux-nix.automaticRenameFormat}"
+
+      # Pane Styles
+      ${lib.optionalString (tmux-nix.activePaneStyle != {}) ''
+        set-option -g window-active-style "${lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}=${value}") tmux-nix.activePaneStyle)}"
+      ''}
+      ${lib.optionalString (tmux-nix.inactivePaneStyle != {}) ''
+        set-option -g window-style "${lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}=${value}") tmux-nix.inactivePaneStyle)}"
+      ''}
+
+      # Status bar
+      ${lib.optionalString (tmux-nix.statusLeft.text != "") ''
+        set-option -g status-left "${tmux-nix.statusLeft.text}"
+        set-option -g status-left-length ${toString tmux-nix.statusLeft.length}
+      ''}
+      ${lib.optionalString (tmux-nix.statusRight.text != "") ''
+        set-option -g status-right "${tmux-nix.statusRight.text}"
+        set-option -g status-right-length ${toString tmux-nix.statusRight.length}
+      ''}
+
+      # Extra configuration (from module options)
       ${tmux-nix.extraConfig}
+
     '';
   };
 }

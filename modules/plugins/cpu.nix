@@ -231,6 +231,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [cfg.package];
     tmux-nix.extraConfig = lib.mkAfter ''
+      # tmux-cpu plugin
       run-shell ${cfg.package}/share/tmux-plugins/tmux-cpu/cpu.tmux
       ${lib.concatStringsSep "\n" confLines}
     '';

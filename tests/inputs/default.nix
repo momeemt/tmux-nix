@@ -39,9 +39,36 @@
           amount = 10;
         };
       };
+      split = {
+        horizontal.key = "%";
+        vertical = {
+          key = "\"";
+          repeatable = true;
+        };
+      };
     };
     extraConfig = ''
       display-message "Hello, tmux-nix!"
     '';
+    statusLeft = {
+      text = "LEFT";
+      length = 20;
+    };
+    statusRight = {
+      text = "RIGHT";
+      length = 30;
+    };
+    baseIndex = 1;
+    paneBaseIndex = 1;
+    automaticRename = false;
+    automaticRenameFormat = "#{window_name}";
+    activePaneStyle = {
+      bg = "colour235"; # dark grey
+      fg = "colour255"; # white
+    };
+    inactivePaneStyle = {
+      bg = "default";
+      fg = "colour245"; # light grey
+    };
   };
 }
