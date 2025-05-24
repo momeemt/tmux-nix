@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  tmux-nix = {
+  programs.tmux-nix = {
     enable = true;
     prefix = "C-a";
     keymaps = {

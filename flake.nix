@@ -31,7 +31,7 @@
           modules = [
             inputs.self.flake.homeModules.tmux-nix
             {
-              tmux-nix = {
+              programs.tmux-nix = {
                 enable = true;
                 extraConfig = "set -g base-index 1";
               };

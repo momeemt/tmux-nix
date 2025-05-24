@@ -28,7 +28,7 @@ Add tmux-nix to your flake inputs:
       modules = [
         tmux-nix.homeModules.tmux-nix
         {
-          tmux-nix = {
+          programs.tmux-nix = {
             enable = true;
             prefix = "C-a";
             keymaps.pane = {
@@ -47,26 +47,30 @@ Add tmux-nix to your flake inputs:
 
 ## Options
 
-- `tmux-nix.enable` (bool): enable configuration.
-- `tmux-nix.package` (package): tmux package to install.
-- `tmux-nix.prefix` (string): prefix key.
-- `tmux-nix.keymaps.pane.*`: pane movement key bindings.
-- `tmux-nix.keymaps.resize.*`: pane resizing bindings; each binding has an `amount` attribute.
-- `tmux-nix.extraConfig` (lines): additional configuration appended to `.tmux.conf`.
-- `tmux-nix.plugins.cpu.*`: configuration for the `tmux-cpu` plugin. See `doc/plugins/cpu.md` for details.
-- `tmux-nix.statusLeft.*`, `tmux-nix.statusRight.*`: configuration for the left and right status bar. See `doc/status-bar.md` for details.
-- `tmux-nix.baseIndex` (integer): base index for windows.
-- `tmux-nix.paneBaseIndex` (integer): base index for panes.
-- `tmux-nix.automaticRename` (bool): enable/disable automatic window renaming.
-- `tmux-nix.automaticRenameFormat` (string): format for automatic window names.
-- `tmux-nix.activePaneStyle` (attrs): style for active panes.
-- `tmux-nix.inactivePaneStyle` (attrs): style for inactive panes.
+- `programs.tmux-nix.enable` (bool): enable configuration.
+- `programs.tmux-nix.out` (string): output file for tmux configuration. Default: `~/.tmux.conf`.
+- `programs.tmux-nix.package` (package): tmux package to install.
+- `programs.tmux-nix.prefix` (string): prefix key.
+- `programs.tmux-nix.keymaps.pane.*`: pane movement key bindings.
+- `programs.tmux-nix.keymaps.resize.*`: pane resizing bindings; each binding has an `amount` attribute.
+- `programs.tmux-nix.keymaps.reload`: reload configuration key binding.
+- `programs.tmux-nix.extraConfig` (lines): additional configuration appended to `.tmux.conf`.
+- `programs.tmux-nix.plugins.cpu.*`: configuration for the `tmux-cpu` plugin. See `doc/plugins/cpu.md` for details.
+- `programs.tmux-nix.statusLeft.*`, `programs.tmux-nix.statusRight.*`: configuration for the left and right status bar. See `doc/status-bar.md` for details.
+- `programs.tmux-nix.baseIndex` (integer): base index for windows.
+- `programs.tmux-nix.paneBaseIndex` (integer): base index for panes.
+- `programs.tmux-nix.automaticRename` (bool): enable/disable automatic window renaming.
+- `programs.tmux-nix.automaticRenameFormat` (string): format for automatic window names.
+- `programs.tmux-nix.activePaneStyle` (attrs): style for active panes.
+- `programs.tmux-nix.inactivePaneStyle` (attrs): style for inactive panes.
+- `programs.tmux-nix.defaultTerminal` (string): sets the `default-terminal` option in tmux. Default: `screen-256color`.
+- `programs.tmux-nix.terminalOverrides` (attrs): terminal capabilities for enabling TrueColor and other features.
 
 Example configuration:
 
 ```nix
 {
-  tmux-nix = {
+  programs.tmux-nix = {
     enable = true;
     plugins.cpu.enable = true;
     keymaps.resize.left.amount = 10;

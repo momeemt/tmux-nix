@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  tmux-nix.plugins.cpu = {
+  programs.tmux-nix.plugins.cpu = {
     enable = true;
     cpu = {
       lowIcon = "-";
