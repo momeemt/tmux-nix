@@ -320,7 +320,9 @@
                 up = "U";
                 down = "D";
               }
-              .${name};
+              .${
+                name
+              };
           in
             mkBind binding.key binding.repeatable "select-pane -${direction}"
         )
@@ -338,7 +340,9 @@
                 up = "U";
                 down = "D";
               }
-              .${name};
+              .${
+                name
+              };
           in
             mkBind binding.key binding.repeatable "resize-pane -${direction} ${toString binding.amount}"
         )

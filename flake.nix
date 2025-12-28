@@ -1,13 +1,13 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     systems.url = "github:nix-systems/default";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix = {
@@ -44,10 +44,13 @@
 
       perSystem = {
         pkgs,
-        self',
+        config,
         ...
       }: {
         devShells.default = pkgs.mkShell {
+          inputsFrom = [
+            config.treefmt.build.devShell
+          ];
           buildInputs = with pkgs; [
             nil
             alejandra
@@ -56,11 +59,7 @@
 
         checks.tmux-nix-test = pkgs.nixosTest {
           name = "tmux-nix-test";
-          nodes.machine = {
-            pkgs,
-            lib,
-            ...
-          }: {
+          nodes.machine = _: {
             imports = [
               inputs.home-manager.nixosModules.home-manager
             ];
@@ -71,7 +70,7 @@
                 (import ./tests/inputs/default.nix)
                 (import ./tests/inputs/plugins/cpu.nix)
               ];
-              home.stateVersion = "24.11";
+              home.stateVersion = "25.11";
             };
           };
           testScript = let
